@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import { envConfig } from "@/config/env.config";
 import { IUser } from "@/interface/user.interface";
 
@@ -32,13 +32,14 @@ userSchema.pre('save', async function (next) {
 });
 
 userSchema.methods.createJWT = function () {
+  const options: SignOptions = {
+    expiresIn: Number(envConfig.JWT_LIFETIME)
+  };
   return jwt.sign(
     { userId: this._id, role: this.role, email: this.email},
-    envConfig.JWT_SECRET,
-    {
-      expiresIn: envConfig.JWT_LIFETIME,
-    }
-  )
+    envConfig.JWT_SECRET as string,
+    options
+  );
 };
 
 userSchema.methods.comparePassword = async function (canditatePassword: string) {
