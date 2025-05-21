@@ -19,13 +19,9 @@ const userSchema = new Schema<IUser>({
   password: { type: String, required: true, minlength: 6, },
   location: { type: String, required: true },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
-  isVerified: { type: Boolean, default: false },
+  isVerified: { type: Boolean, default: true }, // update to false when the verify email service is ready
 }, { timestamps: true });
 
-// userSchema.pre('save', async function () {
-//   const salt = await bcrypt.genSalt(envConfig.JWT_SALT)
-//   this.password = await bcrypt.hash(this.password, salt)
-// });
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
