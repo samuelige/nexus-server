@@ -19,7 +19,7 @@ export default class ChatAppServer {
     this.httpServer = new http.Server(app);
     this.io = new SocketIOServer(this.httpServer, {
       cors: {
-        origin: envConfig.CLIENT_URL,
+        origin: "*", // Allow any origin,
         credentials: true,
       },
     });
